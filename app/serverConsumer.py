@@ -18,27 +18,33 @@ class ServerConsumer:
         self.output_file = output_file
 
     def start(self):
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
-            server_socket.bind((self.host, self.port))
-            server_socket.listen(self.max_connections)
-            logger.info(f"Server listening on {self.host}:{self.port}")
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
+                server_socket.bind((self.host, self.port))
+                server_socket.listen(self.max_connections)
+                logger.info(f"Server listening on {self.host}:{self.port}")
 
-            while True:
-                client_socket, client_address = server_socket.accept()
-                logger.info(f"Connected to client at {client_address}")
+                while True:
+                    client_socket, client_address = server_socket.accept()
+                    logger.info(f"Connected to client at {client_address}")
 
-                client_queue = Queue()
-                self.client_queues[client_address] = client_queue
+                    client_queue = Queue()
+                    self.client_queues[client_address] = client_queue
 
-                # Process tasks for the client
-                threading.Thread(
-                    target=self.task_processor, args=(client_queue, client_address), daemon=True
-                ).start()
+                    # Process tasks for the client
+                    threading.Thread(
+                        target=self.task_processor, args=(client_queue, client_address), daemon=True
+                    ).start()
 
-                # Handle the client connection
-                threading.Thread(
-                    target=self.handle_client, args=(client_socket, client_address, client_queue)
-                ).start()
+                    # Handle the client connection
+                    threading.Thread(
+                        target=self.handle_client, args=(client_socket, client_address, client_queue)
+                    ).start()
+        except OSError as e:
+            if e.errno == 98:  # Address already in use
+                logger.error(f"The address {self.host}:{self.port} is already in use. Please use a different port.")
+            else:
+                logger.error(f"Socket error occurred: {e}")
 
     def receive_data(self, client_socket, length):
         # Receive a fixed amount of data from the client
