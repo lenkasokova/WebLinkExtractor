@@ -27,7 +27,7 @@ Run the following command to start the server:
 python3 app/serverConstumer.py [-h] [-o FILE] [--host HOST] [--port PORT]
 ```
 
-```
+```bash
   -h, --help            Show the help message and exit
   -o FILE, --file FILE  Define output file (default: output.txt).
   --host HOST           Host for the server to bind to (default: localhost).
@@ -42,7 +42,7 @@ python3 app/clientProducer.py [-h] [-f FILE] [--host HOST] [--port PORT]
 ```
 ```bash
   -h, --help            Sho the help message and exit
-  -o FILE, --file FILE  Input file containing URLs (one per line).
+  -f FILE, --file FILE  Input file containing URLs (one per line).
   --host HOST           Host to bind the server. (default: localhost).
   --port PORT           Port to bind the server. (default: 5000).
 
