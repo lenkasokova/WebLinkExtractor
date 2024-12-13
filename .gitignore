@@ -1,0 +1,4 @@
+output.txt
+app/__pycache__/*
+tests/__pycache__/*
+.vscode/*

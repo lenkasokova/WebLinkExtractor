@@ -1,0 +1,1 @@
+python3 app/serverConsumer.py & python3 app/clientProducer.py < tests/urls.txt
