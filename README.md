@@ -91,7 +91,7 @@ Links:
 - Alternative: Run Test Script You can also use the provided test script to fetch data from urls stored in `tests/urls.txt`:
 
 ```
-./run_test.sh
+./run.sh
 ```
 
 ## Tests

@@ -6,7 +6,7 @@ from app.clientProducer import ClientProducer
 
 class TestClientProducer(unittest.TestCase):
     def setUp(self):
-        self.client = ClientProducer(host='localhost', port=5001)
+        self.client = ClientProducer(host='localhost', port=5000)
 
     @patch("socket.socket")
     def test_connect_to_server(self, mock_socket):
@@ -14,7 +14,7 @@ class TestClientProducer(unittest.TestCase):
         mock_socket.return_value = mock_sock
 
         self.client.connect_to_server()
-        mock_sock.connect.assert_called_once_with(('localhost', 5001))
+        mock_sock.connect.assert_called_once_with(('localhost', 5000))
 
     
     @patch("socket.socket")
@@ -49,5 +49,15 @@ class TestClientProducer(unittest.TestCase):
         self.client.fetch_url("https://example.com")
 
         self.assertTrue(self.client.markup_queue.empty())
+
+    @patch("requests.get")
+    def test_fetch_url_incorrect(self, mock_get):
+        """Test fetch_url behavior when an incorrect or malformed URL is provided."""
+        mock_get.side_effect = requests.exceptions.RequestException("Invalid URL")
+
+        self.client.fetch_url("htp://incorrect-url")
+
+        self.assertTrue(self.client.markup_queue.empty())
+
 
         
